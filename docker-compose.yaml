@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: estate-manager
+    build:
+      context: .
+    image: estate_manager:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - 19000:8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=AKDJAJFDALSJFDAJFDA
+      - ALLOWED_HOST=localhost,127.0.0.1
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:7.0.11-alpine
+
+  worker-main:
+    build:
+      context: .
+    image: estate_manager:latest
+    container_name: estate-manager-worker-main
+    command: celery -A estate_manager.app worker -l info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+
+
+  worker-beat:
+    build:
+      context: .
+    image: estate_manager:latest
+    container_name: estate-manager-beat-main
+    command: celery -A estate_manager.app beat -l info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app

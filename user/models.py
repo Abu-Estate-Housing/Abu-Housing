@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
-
 from django.db import models
 from django.utils.text import gettext_lazy
+
 
 from user.custom_user_manager import CustomAccountManager
 
