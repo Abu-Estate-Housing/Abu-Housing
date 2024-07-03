@@ -6,6 +6,7 @@ services:
     build:
       context: .
     image: estate_manager:latest
+    restart: on-failure
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app

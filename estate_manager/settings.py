@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     'user',
     'property',
     'agreement',
+    'rest_framework',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -135,5 +142,11 @@ CELERY_BEAT_SCHEDULE = {
     "Poll-Pending-Payment": {
         "task": "agreement.tasks.poll_unsettled_payment",
         "schedule": timedelta(minutes=1)
+    },
+    "Poll-Agreement": {
+        "task": "agreement.tasks.poll_agreement",
+        "schedule": timedelta(minutes=0.5)
     }
 }
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

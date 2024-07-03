@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
-from property.models import Amenity, Listing, Photo, Property, Status, Type
+from property.models import Amenity, Listing, Photo, Property, Type
 
 # Register your models here.
 #
@@ -9,15 +10,19 @@ class ProprtyAdmin(admin.ModelAdmin):
     list_filter = ("status", "property_type", "listing")
     search_fields = ('occupant__email',)
     list_display = (
-        "occupant", "bedroom", "bathroom", "price", "city", "street", "status"
+        "occupant", "bedroom", "bathroom", "price_in_naira", "city", "street", "status",
     )
+    readonly_fields = ("photos",)
 
+    def price_in_naira(self, obj):
+        formatted_price = "₦{:.2f}".format(obj.price)
+        return format_html(formatted_price)
 
-@admin.register(Status)
-class StatusAdmin(admin.ModelAdmin):
-    list_display = (
-        'status',
-    )
+# @admin.register(Status)
+# class StatusAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'status',
+#     )
 
 @admin.register(Type)
 class TypeAdmin(admin.ModelAdmin):
