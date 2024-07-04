@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGISTRY: docker.io
-      IMAGE_NAME: razkky/${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}
 
     permissions:
       contents: read
