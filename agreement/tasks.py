@@ -1,16 +1,15 @@
 from datetime import timedelta
 import datetime
-from time import timezone
+import os
+from slack import WebClient
 from django.db import transaction
-from django.utils import text
+from dotenv import load_dotenv
 from estate_manager.celery import app
 from agreement.models import Agreement, Payment
-from dotenv import load_dotenv
-from slack import WebClient
-import os
 
 load_dotenv()
 client = WebClient(token=os.getenv("SLACK_API_TOKEN"))
+
 
 @app.task(name="agreement.tasks.process_unsettled_payment")
 def process_unsettled_payment(payment_id):
@@ -36,6 +35,7 @@ def poll_unsettled_payment():
     payments = Payment.objects.filter(settled=False)
     for payment in payments:
         process_unsettled_payment.delay(payment.id)
+
 
 @app.task(name="agreement.tasks.send_reminder")
 def send_reminder(agreement_id):
@@ -66,20 +66,32 @@ def send_reminder(agreement_id):
     except Exception as e:
         print("Encountered error sending slack message", e)
 
-    
+
 @app.task(name="agreement.tasks.poll_agreement")
 def poll_agreement():
     now = datetime.datetime.now()
-    
-    # Calculate the date one month from now
     one_month_from_now = now + timedelta(days=30)
-    
     # Filter agreements where the end_date is less than one month away
-    agreements = Agreement.objects.filter(end_date__lte=one_month_from_now).filter(reminder_sent=False)
+    agreements = Agreement.objects.filter(
+        end_date__lte=one_month_from_now).filter(
+            reminder_sent=False)
     for agreement in agreements:
         send_reminder.delay(agreement.id)
 
-# @app.tasks(name="agreement.tasks.send_notification")
-# def send_notification(agreement_id):
-#     agreement = Agreement.objects.get(id=agreement_id)
-#     occupant_email = agreement.occupant.email
+
+@app.task(name="agreement.tasks.uncheck_reminder_sent")
+def uncheck_reminder_sent():
+    today = datetime.datetime.now().date()  # Use .date() to compare just the date part
+    near_end_dates = [today + timedelta(days=x) for x in [7, 14]]
+
+    # Directly filter agreements whose end dates are either 7 or 14 days away and reminder_sent is True
+    agreements_to_uncheck = Agreement.objects.filter(
+        reminder_sent=True,
+        end_date__date__in=near_end_dates
+    )
+
+    for agreement in agreements_to_uncheck:
+        print(f'Near end dates {near_end_dates}')
+        print(f'End date of agreement {agreement.end_date}')
+        agreement.reminder_sent = False
+        agreement.save()

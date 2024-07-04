@@ -134,7 +134,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
 
@@ -146,7 +145,11 @@ CELERY_BEAT_SCHEDULE = {
     "Poll-Agreement": {
         "task": "agreement.tasks.poll_agreement",
         "schedule": timedelta(minutes=0.5)
-    }
+    },
+    "Poll-Check-Reminders": {
+        "task": "agreement.tasks.uncheck_reminder_sent",
+        "schedule": timedelta(minutes=0.5)
+    },
 }
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
