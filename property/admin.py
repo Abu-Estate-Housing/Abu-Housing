@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from .forms import PropertyAdminForm
 
 from property.models import Amenity, Listing, Photo, Property, Type
 
@@ -7,10 +8,12 @@ from property.models import Amenity, Listing, Photo, Property, Type
 #
 @admin.register(Property)
 class ProprtyAdmin(admin.ModelAdmin):
+
+    form = PropertyAdminForm
     list_filter = ("status", "property_type", "listing")
-    search_fields = ('occupant__email',)
+    search_fields = ('tenant__email',)
     list_display = (
-        "occupant", "bedroom", "bathroom", "price_in_naira", "city", "street", "status",
+        "tenant", "bedroom", "bathroom", "price_in_naira", "city", "street", "status",
     )
     readonly_fields = ("photos",)
 

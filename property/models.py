@@ -41,8 +41,8 @@ class Property(models.Model):
         (AVAILABLE, AVAILABLE),
         (NOT_AVAILABLE, NOT_AVAILABLE),
     )
-    occupant = models.ForeignKey(
-        User, null=True, blank=True, related_name="occupant_properties", on_delete=models.DO_NOTHING
+    tenant = models.ForeignKey(
+        User, null=True, blank=True, related_name="tenant_properties", on_delete=models.DO_NOTHING
     )
     landlord = models.ForeignKey(
         Landlord, null=True, blank=True, related_name="landlord_properties", on_delete=models.DO_NOTHING
@@ -79,7 +79,7 @@ class Property(models.Model):
         
         return photos_format
     def __str__(self):
-        return f"{self.occupant} Propety"
+        return f"{self.landlord} Propety {self.street}"
 
 
 class Photo(models.Model):

@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
+from agreement.forms import AgreementAdminForm
 from agreement.models import Agreement, Payment
 
 # Register your models here.
 @admin.register(Agreement)
 class AgreementAdmin(admin.ModelAdmin):
+    form = AgreementAdminForm
+
     list_display = ('property_name', 'price_in_naira', 'amount_paid', 'balance',  'status', 'start_date', 'end_date',)
 
     def balance(self, obj):

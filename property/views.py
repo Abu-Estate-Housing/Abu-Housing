@@ -12,3 +12,4 @@ class ListPropertyView(generics.GenericAPIView):
         properties = PropertyService.get_properties()
         properites = self.serializer_class(properties, many=True).data
         return CustomResponse(data=properites, status=status.HTTP_200_OK)
+
