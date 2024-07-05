@@ -40,7 +40,7 @@ def poll_unsettled_payment():
 @app.task(name="agreement.tasks.send_reminder")
 def send_reminder(agreement_id):
     agreement = Agreement.objects.get(id=agreement_id)
-    user = f"{agreement.occupant.first_name} {agreement.occupant.last_name}"
+    user = f"{agreement.tenant.first_name} {agreement.tenant.last_name}"
     end_date = agreement.end_date
     month = end_date.strftime("%B")
     day = end_date.day

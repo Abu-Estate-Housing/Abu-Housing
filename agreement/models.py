@@ -14,7 +14,7 @@ class Agreement(models.Model):
     )
     property_name = models.ForeignKey(Property, on_delete=models.CASCADE, null=False)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=False)
-    status = models.CharField(max_length=50, choices=STATUS, null=False)
+    status = models.CharField(max_length=50, choices=STATUS, null=False, default=NOT_COMPLETED)
     price = models.FloatField(null=False)
     amount_paid = models.FloatField(default=0.0, null=False)
     start_date = models.DateTimeField()
@@ -36,3 +36,6 @@ class Payment(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.agreement} Payment'

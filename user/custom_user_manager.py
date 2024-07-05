@@ -8,15 +8,10 @@ class CustomAccountManager(BaseUserManager):
         if not email:
             raise ValueError(gettext_lazy("You must provide an email address"))
         email = self.normalize_email(email)
-        print("Creating user")
-        print(f"Kwargs {kwargs}")
         password = kwargs.get('password')
-        print(f"Email {email} Password {password}")
         user = self.model(email=email, **kwargs)
-        print("Created user", user)
         user.set_password(password)
         user.save(using=self._db)
-        print("User Saved")
         return user
 
     def create_superuser(

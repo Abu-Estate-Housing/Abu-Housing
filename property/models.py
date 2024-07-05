@@ -73,13 +73,13 @@ class Property(models.Model):
         for photo in photos:
             print(f'urls for photo {photo.image.url}')
             photos_format += format_html(
-                '<img src="{}" width="{}" height="{}" /><p></p>',
+                '<img src="{}" width="{}" height="{}" /><p></p><p></p>',
                 photo.image.url, 300, 200
             )
         
         return photos_format
     def __str__(self):
-        return f"{self.landlord} Propety {self.street}"
+        return f"{self.tenant} Propety {self.street}"
 
 
 class Photo(models.Model):
