@@ -10,5 +10,4 @@ class AgreementAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AgreementAdminForm, self).__init__(*args, **kwargs)
-        # Filter the tenant field to only include users with the Tenant role
         self.fields['tenant'].queryset = Tenant.objects.filter(role=Tenant.TENANT)

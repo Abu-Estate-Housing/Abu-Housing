@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.urls import path
 from unfold.admin import ModelAdmin
 from .models import Landlord, Staff, Tenant, User
+from unfold.views import UnfoldModelAdminViewMixin
+from django.views.generic import TemplateView
 
 # Register your models here.
 
@@ -42,9 +45,8 @@ class TenantAdmin(UserAdmin):
         qs = super().get_queryset(request)
         return qs.filter(role=User.TENANT)
 
-
 @admin.register(Staff)
-class StaffAdmin(UserAdmin):
+class StaffAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

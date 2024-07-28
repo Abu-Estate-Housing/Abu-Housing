@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +29,7 @@ SECRET_KEY = 'django-insecure-rv+ay)t(!(yyvlpsh58!!1tzvqcfb%zj$ie5^mlhlkq)liiz@o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -68,7 +70,9 @@ ROOT_URLCONF = 'estate_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates/"),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,7 +155,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     "Poll-Check-Reminders": {
         "task": "agreement.tasks.uncheck_reminder_sent",
-        "schedule": timedelta(minutes=0.5)
+        "schedule": timedelta(days=1)
     },
 }
 MEDIA_URL = '/media/'
@@ -161,4 +165,53 @@ UNFOLD = {
     "SITE_TITLE": "Ngobar&Co",
     "SITE_HEADER": "Ngobar&Co Housing",
     "SITE_URL": "/",
+    "DASHBOARD_CALLBACK": "estate_manager.views.dashboard_callback",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                ],
+            },
+            {
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Tenants"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:user_tenant_changelist"),
+                    },
+                    {
+                        "title": _("Landlords"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:user_landlord_changelist"),
+                    },
+                    {
+                        "title": _("Users"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:user_user_changelist"),
+                    },
+                    {
+                        "title": _("Property"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:property_property_changelist"),
+                    },
+                    {
+                        "title": _("Agreement"),
+                        "icon": "task_alt",
+                        "link": reverse_lazy(
+                            "admin:agreement_agreement_changelist"
+                        ),
+                    },
+                ],
+            },
+        ],
+    },
 }

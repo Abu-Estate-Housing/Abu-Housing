@@ -71,7 +71,6 @@ def send_reminder(agreement_id):
 def poll_agreement():
     now = datetime.datetime.now()
     one_month_from_now = now + timedelta(days=30)
-    # Filter agreements where the end_date is less than one month away
     agreements = Agreement.objects.filter(
         end_date__lte=one_month_from_now).filter(
             reminder_sent=False)
