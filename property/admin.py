@@ -14,7 +14,7 @@ class ProprtyAdmin(ModelAdmin):
     list_filter = ("status", "property_type", "listing")
     search_fields = ('tenant__email',)
     list_display = (
-        "tenant", "bedroom", "bathroom", "price_in_naira", "city", "street", "status",
+        "tenant", "landlord", "bedroom", "bathroom", "price_in_naira", "city", "street", "status",
     )
     readonly_fields = ("photos",)
 
